@@ -1,23 +1,31 @@
 <template>
   <div class="home">
     <div class="center">
-      <div class="tou"><img src="../assets/1.png"></div>
+      <div class="tou"><img src="../../assets/1.png"></div>
       <form>
-        <input type="text" v-model="Accounts" id="user" class="zhang" placeholder="账号：">
-        <input type="password" v-model="password" id="pwd" class="password" placeholder="密码：">
-        <button class="Login">登录</button>
+        <input type="text" v-model="Form.Accounts" id="user" class="zhang" placeholder="账号：" required="required">
+        <input type="password" v-model="Form.password" id="pwd" class="password" placeholder="密码：" required="required">
+        <button class="Login" @click="onSubmit">登录</button>
       </form>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-  name: 'home',
+  name: 'login',
   data () {
     return {
-      Accounts: '',
-      password: ''
+      Form: {
+        Accounts: '',
+        password: ''
+      }
+    }
+  },
+  methods: {
+    async onSubmit () {
+      const resData= await axios.post('')
     }
   }
 }
@@ -61,7 +69,8 @@ export default {
     position: absolute;
     top: 90px;
     left: 80px;
-    padding-left: 25px;
+    padding-left: 10px;
+    border-radius: 6px 6px 6px 6px
   }
   .password{
     width: 300px;
@@ -69,7 +78,8 @@ export default {
     position: absolute;
     top: 140px;
     left: 80px;
-    padding-left: 25px;
+    padding-left: 10px;
+    border-radius: 6px 6px 6px 6px
   }
   .Login{
     background-color: blue;
@@ -79,9 +89,10 @@ export default {
     font-size: 20px;
     cursor: pointer;
     border:none;
+    border-radius: 10px 10px 10px 10px;
     position: absolute;
     top: 200px;
-    left: 95px;
+    left: 97px;
   }
   .Login:hover{
     background-color:#fff;
