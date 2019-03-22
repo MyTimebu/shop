@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from './views/Login/index.vue'
 import Layout from './views/Layout'
+import Home from './views/home.vue'
 
 Vue.use(Router)
 
@@ -10,7 +11,10 @@ const router = new Router({
     {
       path: '/',
       name: 'index',
-      component: Layout
+      component: Layout,
+      children: [
+        { path: '', component: Home }
+      ]
     },
     {
       path: '/login',

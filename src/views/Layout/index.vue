@@ -10,62 +10,67 @@
       <input type="text" class="in" disabled="disabled" placeholder="此功能暂未开放，敬请期待！">
       <p><a @click="rollOut">退出</a></p>
     </nav>
-    <el-menu default-active="1-4-1" class="el-menu-vertical-demo zheng" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-      <el-submenu index="1">
-        <template slot="title">
-          <i class="el-icon-menu"></i>
-          <span slot="title">用户管理</span>
-        </template>
-        <el-menu-item-group>
-          <el-menu-item index="1-1">用户列表</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-      <el-submenu index="2">
-        <template slot="title">
-          <i class="el-icon-menu"></i>
-          <span slot="title">权限管理</span>
-        </template>
-        <el-menu-item-group>
-          <el-menu-item index="2-1">角色列表</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group>
-          <el-menu-item index="2-2">权限列表</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-      <el-submenu index="3">
-        <template slot="title">
-          <i class="el-icon-menu"></i>
-          <span slot="title">商品管理</span>
-        </template>
-        <el-menu-item-group>
-          <el-menu-item index="3-1">商品列表</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group>
-          <el-menu-item index="3-2">分类参数</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group>
-          <el-menu-item index="3-3">商品分类</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-      <el-submenu index="4">
-        <template slot="title">
-          <i class="el-icon-menu"></i>
-          <span slot="title">订单管理</span>
-        </template>
-        <el-menu-item-group>
-          <el-menu-item index="4-1">订单列表</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-      <el-submenu index="5">
-        <template slot="title">
-          <i class="el-icon-menu"></i>
-          <span slot="title">数据统计</span>
-        </template>
-        <el-menu-item-group>
-          <el-menu-item index="4-1">数据报表</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-    </el-menu>
+    <div class="bigbox">
+      <el-menu default-active="1-4-1" class="el-menu-vertical-demo zheng" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+        <el-submenu index="1">
+          <template slot="title">
+            <i class="el-icon-menu"></i>
+            <span slot="title">用户管理</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="1-1">用户列表</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+        <el-submenu index="2">
+          <template slot="title">
+            <i class="el-icon-menu"></i>
+            <span slot="title">权限管理</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="2-1">角色列表</el-menu-item>
+          </el-menu-item-group>
+          <el-menu-item-group>
+            <el-menu-item index="2-2">权限列表</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+        <el-submenu index="3">
+          <template slot="title">
+            <i class="el-icon-menu"></i>
+            <span slot="title">商品管理</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="3-1">商品列表</el-menu-item>
+          </el-menu-item-group>
+          <el-menu-item-group>
+            <el-menu-item index="3-2">分类参数</el-menu-item>
+          </el-menu-item-group>
+          <el-menu-item-group>
+            <el-menu-item index="3-3">商品分类</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+        <el-submenu index="4">
+          <template slot="title">
+            <i class="el-icon-menu"></i>
+            <span slot="title">订单管理</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="4-1">订单列表</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+        <el-submenu index="5">
+          <template slot="title">
+            <i class="el-icon-menu"></i>
+            <span slot="title">数据统计</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="4-1">数据报表</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+      </el-menu>
+      <div class="right">
+        <router-view></router-view>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -168,5 +173,13 @@ export default {
   .zheng{
     height: 100%;
     border-right: 1.4px rgb(34, 0, 156) solid !important;
+  }
+  .bigbox{
+    width: 100%;
+    height: 100%;
+    display: flex;
+  }
+  .el-menu-item-group__title{
+    display: none !important;
   }
 </style>
