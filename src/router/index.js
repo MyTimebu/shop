@@ -1,26 +1,12 @@
+/* eslint-disable eol-last */
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from './views/Login/index.vue'
-import Layout from './views/Layout'
 
 Vue.use(Router)
 
-const router = new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'index',
-      component: Layout
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: Login
-    }
-  ]
-})
-
+const router = new Router()
 router.beforeEach((to, from, next) => {
+  // to and from are both route objects. must call `next`.
   const { path } = to
   if (path !== '/login') {
     const token = window.localStorage.getItem('token')

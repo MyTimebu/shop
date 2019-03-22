@@ -3,9 +3,9 @@
     <div class="center">
       <div class="tou"><img src="../../assets/1.png"></div>
       <form>
-        <input type="text" v-model="Form.Accounts" id="user" class="zhang" placeholder="账号：" required="required">
-        <input type="password" v-model="Form.password" id="pwd" class="password" placeholder="密码：" required="required">
-        <button class="Login" @click="onSubmit">登录</button>
+        <input type="text" v-model="Form.username" id="user"  name="username" class="zhang" placeholder="账号：" required="required">
+        <input type="password" v-model="Form.password" id="pwd" name="password" class="password" placeholder="密码：" required="required">
+        <button class="Login" @click.prevent="onSubmit">登录</button>
       </form>
     </div>
   </div>
@@ -18,14 +18,39 @@ export default {
   data () {
     return {
       Form: {
-        Accounts: '',
+        username: '',
         password: ''
       }
     }
   },
   methods: {
     async onSubmit () {
-      const resData= await axios.post('')
+      let user = this.Form.username.trim()
+      let pwd = this.Form.password.trim()
+      if (user === '' || pwd === '') {
+        return this.$notify({
+          title: '提示',
+          message: '用户名或密码不能为空',
+          type: 'warning'
+        })
+      }
+      const resData = await axios.post('http://localhost:8888/api/private/v1/login', this.Form)
+      console.log(resData)
+      console.log(this.Form)
+      if (resData.data.meta.status !== 200) {
+        this.$notify.error({
+          title: '警告',
+          message: '用户名或密码错误'
+        })
+      } else {
+        window.localStorage.setItem('token', resData.data.data.token)
+        this.$notify({
+          title: `欢迎${resData.data.data.username}`,
+          message: '我们欢迎您的登录',
+          type: 'success'
+        })
+        this.$router.push('/')
+      }
     }
   }
 }
