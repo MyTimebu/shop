@@ -3,70 +3,11 @@
     <nav>
       <img src="./logo.jpg">
       <h1>电商管理</h1>
-      <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;" class="tiao">
-        <el-radio-button :label="false">展开</el-radio-button>
-        <el-radio-button :label="true">收起</el-radio-button>
-      </el-radio-group>
       <input type="text" class="in" disabled="disabled" placeholder="此功能暂未开放，敬请期待！">
       <p><a @click="rollOut">退出</a></p>
     </nav>
     <div class="bigbox">
-      <el-menu default-active="1-4-1" class="el-menu-vertical-demo zheng" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-        <el-submenu index="1">
-          <template slot="title">
-            <i class="el-icon-menu"></i>
-            <span slot="title">用户管理</span>
-          </template>
-          <el-menu-item-group>
-            <el-menu-item index="1-1">用户列表</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
-        <el-submenu index="2">
-          <template slot="title">
-            <i class="el-icon-menu"></i>
-            <span slot="title">权限管理</span>
-          </template>
-          <el-menu-item-group>
-            <el-menu-item index="2-1">角色列表</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group>
-            <el-menu-item index="2-2">权限列表</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
-        <el-submenu index="3">
-          <template slot="title">
-            <i class="el-icon-menu"></i>
-            <span slot="title">商品管理</span>
-          </template>
-          <el-menu-item-group>
-            <el-menu-item index="3-1">商品列表</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group>
-            <el-menu-item index="3-2">分类参数</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group>
-            <el-menu-item index="3-3">商品分类</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
-        <el-submenu index="4">
-          <template slot="title">
-            <i class="el-icon-menu"></i>
-            <span slot="title">订单管理</span>
-          </template>
-          <el-menu-item-group>
-            <el-menu-item index="4-1">订单列表</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
-        <el-submenu index="5">
-          <template slot="title">
-            <i class="el-icon-menu"></i>
-            <span slot="title">数据统计</span>
-          </template>
-          <el-menu-item-group>
-            <el-menu-item index="4-1">数据报表</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
-      </el-menu>
+      <Appaside></Appaside>
       <div class="right">
         <router-view></router-view>
       </div>
@@ -75,24 +16,18 @@
 </template>
 
 <script>
+import Appaside from './aside.vue'
+
 export default {
   name: 'layout',
-  data () {
-    return {
-      isCollapse: true
-    }
-  },
   methods: {
     rollOut () {
       window.localStorage.removeItem('token')
       this.$router.push('/login')
-    },
-    handleOpen (key, keyPath) {
-      console.log(key, keyPath)
-    },
-    handleClose (key, keyPath) {
-      console.log(key, keyPath)
     }
+  },
+  components: {
+    Appaside
   }
 }
 </script>
@@ -138,11 +73,6 @@ export default {
     background-color: rgb(48, 48, 48);
     text-shadow: 3px 3px 0px rgb(131, 131, 131);
     color: #fff
-  }
-  nav>.tiao{
-    position: absolute;
-    left: 310px;
-    top:40px
   }
   nav>.in{
     width: 300px;

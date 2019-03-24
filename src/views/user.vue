@@ -1,10 +1,10 @@
 <template>
-  <div id="mydiv" style="height:500px;">这是背景</div>
-
+  <div>数据请求中</div>
 </template>
 
 <script>
 export default {
+
 }
 </script>
 
