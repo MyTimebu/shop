@@ -8,7 +8,7 @@
     </nav>
     <div class="bigbox">
       <Appaside></Appaside>
-      <div class="right">
+      <div class="rights">
         <router-view></router-view>
       </div>
     </div>
@@ -107,9 +107,14 @@ export default {
   .bigbox{
     width: 100%;
     height: 100%;
+    background-color:rgb(255, 255, 231);
     display: flex;
   }
   .el-menu-item-group__title{
     display: none !important;
+  }
+  .rights{
+    width: 100%;
+    height: 100%;
   }
 </style>

@@ -1,8 +1,8 @@
 import axios from 'axios'
-import router from 'vue-router'
+import router from '../router'
 
 const http = axios.create({
-  baseURL: 'http://localhost:8888/api/private/v1'
+  baseURL: 'http://localhost:8888/api/private/v1/'
 })
 
 http.interceptors.request.use(function (config) {
@@ -14,8 +14,8 @@ http.interceptors.request.use(function (config) {
   return Promise.reject(error)
 })
 
-http.interceptors.request.use(function (response) {
-  if (response.data.meta.staus === 401) {
+http.interceptors.response.use(function (response) {
+  if (response.data.meta.status === 401) {
     router.replace('/login')
   }
   return response
