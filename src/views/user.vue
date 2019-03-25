@@ -1,29 +1,31 @@
 <template>
-  <div class="kai">
-    <div class="NavigationBar">
+  <div class="kai clearfloat">
+    <!-- 面包屑组件 -->
+    <div class="NavigationBar clearfloat">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item><a href="/user">用户管理</a></el-breadcrumb-item>
         <el-breadcrumb-item>用户列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="NavigationBar" style="background-color:rgb(0, 255, 255);height:50px;position: relative;">
-      <input type="text" class="Text" placeholder="请输入筛选内容">
-      <el-button type="primary" icon="el-icon-search" class="btn_one">搜索</el-button>
+    <!-- 添加功能 -->
+    <div class="NavigationBar clearfloat" style="background-color:rgb(0, 255, 255);height:50px;position: relative;">
+      <input type="text" class="Text" v-model="texts" @keyup.enter="LoadUserS" placeholder="请输入筛选内容">
+      <el-button type="primary" icon="el-icon-search" class="btn_one" @click="LoadUserS">搜索</el-button>
       <el-button type="success" round class="btn_two" @click="add = true">点击添加</el-button>
 
       <el-dialog title="添加用户" :visible.sync="add">
         <el-form :model="form" ref="addFormEl" :rules="addFormRules">
-          <el-form-item label="用户名" :label-width="formLabelWidth">
+          <el-form-item label="用户名" :label-width="formLabelWidth" prop="username">
             <el-input v-model="form.username" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="密码" :label-width="formLabelWidth">
+          <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
             <el-input v-model="form.password" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="电话" :label-width="formLabelWidth">
+          <el-form-item label="电话" :label-width="formLabelWidth" prop="mobile">
             <el-input v-model="form.mobile" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="邮箱" :label-width="formLabelWidth">
+          <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
             <el-input v-model="form.email" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
@@ -33,8 +35,9 @@
         </div>
       </el-dialog>
     </div>
-    <div class="biao">
-      <table>
+    <!-- 表格内容渲染 -->
+    <div class="biao clearfloat">
+      <table class="clearfloat">
         <thead>
           <tr>
             <td>ID</td>
@@ -55,27 +58,54 @@
                 <el-switch
                   v-model="item.mg_state"
                   active-color="#13ce66"
-                  inactive-color="#ff4949">
+                  inactive-color="#ff4949"
+                  @change="zhuangtai(item.id,item.mg_state)">
                 </el-switch>
               </td>
               <td>
-                <el-button type="primary" size="medium" icon="el-icon-edit" circle></el-button>
-                <el-button type="success" size="medium" icon="el-icon-setting" circle></el-button>
-                <el-button type="danger" size="medium" icon="el-icon-delete" circle></el-button>
+                <el-tooltip class="item" effect="dark" content="编辑用户" placement="bottom-start">
+                <el-button type="primary" size="medium" icon="el-icon-edit" @click="$refs.reference.Up(item.id)" circle></el-button>
+                </el-tooltip>
+                <el-tooltip class="item" effect="dark" content="权限管理" placement="bottom">
+                <el-button type="success" size="medium" icon="el-icon-setting" @click="$refs.userEditRoleEl.showEditRoleDialog(item.id)" circle></el-button>
+                </el-tooltip>
+                <el-tooltip class="item" effect="dark" content="删除用户" placement="bottom-end">
+                <el-button type="danger" size="medium" icon="el-icon-delete" @click="del(item.id)" circle></el-button>
+                </el-tooltip>
               </td>
             </tr>
         </tbody>
       </table>
     </div>
+    <!-- 分页 -->
+    <div class="fen clearfloat">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage4"
+        :page-sizes="[5, 10,len]"
+        :page-size="5"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="Number(len)">
+      </el-pagination>
+    </div>
+    <!-- 权限编辑 -->
+    <quanxian ref="userEditRoleEl"></quanxian>
+    <!-- 用户编辑 -->
+    <EdiT ref="reference" v-on:edit-success="loadUser"></EdiT>
   </div>
 </template>
 
 <script>
-import { getUserList, addUser } from '@/api/user'
+import { getUserList, addUser, deleteById, status } from '@/api/user'
+import quanxian from '@/views/Features'
+import EdiT from '@/views/Features/Edit.vue'
+
 export default {
   name: 'AppUser',
   data () {
     return {
+      texts: '',
       Datas: [],
       add: false,
       form: {
@@ -98,17 +128,35 @@ export default {
         mobile: [
           { required: true, message: '请输入电话', trigger: 'blur' }
         ]
-      }
+      },
+      currentPage4: 1,
+      len: '',
+      article: '',
+      Pages: ''
     }
   },
   async created () {
     this.loadUser()
   },
   methods: {
-    async loadUser () {
-      const datas = await getUserList({ pagenum: 1, pagesize: 50 })
-      console.log(datas.data.users.length)
+    async loadUser (val, article, texts) {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+
+      this.Datas.splice(0, this.Datas.length)
+      console.log(texts)
+      const datas = await getUserList({ pagenum: val || 1, pagesize: article || 5, query: texts || '' })
+
+      const datax = await getUserList({ pagenum: 1, pagesize: 200 })
+
+      this.len = datax.data.users.length
+
       let len = datas.data.users.length
+
       for (let index = 0; index < len; index++) {
         let shuju = {
           id: datas.data.users[index].id,
@@ -117,8 +165,10 @@ export default {
           create_time: datas.data.users[index].create_time,
           mg_state: datas.data.users[index].mg_state
         }
+
         this.Datas.push(shuju)
       }
+      loading.close()
     },
     deleteRow (index, rows) {
       rows.splice(index, 1)
@@ -142,9 +192,56 @@ export default {
         console.log(123)
         this.$refs.addFormEl.resetFields() // 清空表单数据
         this.add = false // 隐藏对话框
-        window.location.reload(); // 重新加载用户数据列表
+        this.loadUser() // 重新加载用户数据列表
       }
+    },
+    handleSizeChange (val) {
+      this.article = val
+      this.loadUser(Number(this.Pages), Number(this.article), this.texts)
+    },
+    handleCurrentChange (val) {
+      this.Pages = val
+      this.loadUser(Number(this.Pages), Number(this.article), this.texts)
+    },
+    del (id) {
+      this.$confirm('此操作将删除该用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        console.log(id)
+        const { meta } = await deleteById(id)
+        if (meta.status === 200) {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.loadUser()
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    async zhuangtai (id, type) {
+      const { meta } = await status(id, type)
+      if (meta.status === 200) {
+        this.$message({
+          message: meta.msg,
+          type: 'success'
+        })
+        this.loadUser(Number(this.Pages), Number(this.article), this.texts)
+      }
+    },
+    LoadUserS () {
+      this.loadUser(Number(this.Pages), Number(this.article), this.texts)
     }
+  },
+  components: {
+    quanxian,
+    EdiT
   }
 }
 </script>
@@ -183,7 +280,7 @@ export default {
     margin: 0 auto;
   }
   td{
-    width: 16%;
+    width: 15.8%;
     height: 40px;
     text-align: center;
     line-height: 40px;
@@ -221,5 +318,15 @@ export default {
     position: absolute;
     right: 5px;
     top:5px;
+  }
+  .fen{
+    width: 90%;
+    height: 40px;
+    margin: 10px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 1px 8px 7px -5px rgb(157, 16, 170);
+    background-color: rgb(0, 149, 175);
   }
 </style>

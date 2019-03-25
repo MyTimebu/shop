@@ -1,5 +1,6 @@
 import axios from 'axios'
 import router from '../router'
+import { getToken } from '@/utils/token'
 
 const http = axios.create({
   baseURL: 'http://localhost:8888/api/private/v1/'
@@ -7,7 +8,7 @@ const http = axios.create({
 
 http.interceptors.request.use(function (config) {
   if (config.url !== '/login') {
-    config.headers.Authorization = window.localStorage.getItem('token')
+    config.headers.Authorization = getToken()
   }
   return config
 }, function (error) {

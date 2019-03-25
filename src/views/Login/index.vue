@@ -13,6 +13,8 @@
 
 <script>
 import axios from 'axios'
+import { setToken } from '@/utils/token'
+
 export default {
   name: 'login',
   data () {
@@ -43,7 +45,7 @@ export default {
           message: '用户名或密码错误'
         })
       } else {
-        window.localStorage.setItem('token', resData.data.data.token)
+        setToken(resData.data.data.token)
         this.$notify({
           title: `欢迎${resData.data.data.username}`,
           message: '我们欢迎您的登录',

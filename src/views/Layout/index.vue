@@ -1,14 +1,14 @@
 <template>
-  <div class="fix">
-    <nav>
+  <div class="fix clearfloat">
+    <nav class="clearfloat">
       <img src="./logo.jpg">
       <h1>电商管理</h1>
       <input type="text" class="in" disabled="disabled" placeholder="此功能暂未开放，敬请期待！">
       <p><a @click="rollOut">退出</a></p>
     </nav>
-    <div class="bigbox">
+    <div class="bigbox clearfloat" >
       <Appaside></Appaside>
-      <div class="rights">
+      <div class="rights clearfloat">
         <router-view></router-view>
       </div>
     </div>
@@ -17,12 +17,12 @@
 
 <script>
 import Appaside from './aside.vue'
-
+import { removeToken } from '@/utils/token'
 export default {
   name: 'layout',
   methods: {
     rollOut () {
-      window.localStorage.removeItem('token')
+      removeToken()
       this.$router.push('/login')
     }
   },
@@ -101,7 +101,6 @@ export default {
     min-height: 400px
   }
   .zheng{
-    height: 100%;
     border-right: 1.4px rgb(34, 0, 156) solid !important;
   }
   .bigbox{
