@@ -96,7 +96,7 @@ export default {
   }
   .bigbox{
     width: 100%;
-    height: 100%;
+
     background-color:rgb(255, 255, 231);
     display: flex;
   }
@@ -105,6 +105,5 @@ export default {
   }
   .rights{
     width: 100%;
-    height: 100%;
   }
 </style>

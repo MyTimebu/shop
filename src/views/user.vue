@@ -258,7 +258,6 @@ export default {
   }
   .kai{
     width: 100%;
-    height: 100%;
   }
   .biao{
     width: 90%;
@@ -271,15 +270,15 @@ export default {
   .el-breadcrumb{
     line-height: 40px !important;
   }
-  table{
+  .biao table{
     width: 100%;
     border-collapse: collapse;
     border-radius: 10px 10px 10px 10px;
   }
-  tr{
+  .biao tr{
     margin: 0 auto;
   }
-  td{
+  .biao td{
     width: 15.8%;
     height: 40px;
     text-align: center;
@@ -290,10 +289,10 @@ export default {
     margin-left: 5px;
     margin-top: 5px;
   }
-  thead>tr>td{
+  .biao thead>tr>td{
     color: blueviolet
   }
-  tbody>tr>td{
+  .biao tbody>tr>td{
     color:darkcyan;
   }
   .Text{
