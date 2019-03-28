@@ -2,13 +2,12 @@
   <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
     <el-tree
       :data="data2"
+      ref="tree"
       show-checkbox
       default-expand-all
       :default-checked-keys="defaultChecked"
       node-key="id"
       :props="defaultProps"
-      ref="tree"
-      @check-change="getChecked"
     ></el-tree>
     <span slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false">取 消</el-button>
@@ -26,7 +25,6 @@ export default {
       id: '',
       dialogVisible: false,
       data2: [],
-      getChecked: [],
       defaultChecked: [],
       defaultProps: {
         children: 'children',
@@ -67,10 +65,11 @@ export default {
       this.defaultChecked = tem
     },
     async edite () {
-      const { data, meta } = await getRoleset(this.id, (this.$refs.tree.getCheckedKeys()).join(','))
-      console.log(data, (this.$refs.tree.getCheckedKeys()).join(','))
+      const rid= [...this.$refs.tree.getHalfCheckedKeys(), ...this.$refs.tree.getCheckedKeys()].join(',')
+
+      const { data, meta } = await getRoleset(this.id, rid)
+      console.log(data)
       if (meta.status === 200) {
-        console.log(123)
         this.dialogVisible = false
         this.$message({
           message: meta.msg,
