@@ -25,7 +25,7 @@
             <el-row class="first" v-for="first in scope.row.children" :key="first.id">
               <!-- 一级 -->
               <el-col :span="4">
-                <el-tag closable>{{ first.authName }}</el-tag>
+                <el-tag closable @close="handleDeleteRights(scope.row,first)">{{ first.authName }}</el-tag>
                 <i class="el-icon-arrow-right"></i>
               </el-col>
 
@@ -33,13 +33,13 @@
               <el-col :span="20">
                 <el-row class="second" v-for="second in first.children" :key="second.id">
                   <el-col :span="4">
-                    <el-tag closable type="success">{{ second.authName }}</el-tag>
+                    <el-tag closable type="success" @close="handleDeleteRights(scope.row,second)">{{ second.authName }}</el-tag>
                     <i class="el-icon-arrow-right"></i>
                   </el-col>
 
                   <!-- 三级 -->
                   <el-col :span="20">
-                    <el-tag class="third" v-for="third in second.children" :key="third.id" closable type="warning">{{ third.authName }}</el-tag>
+                    <el-tag class="third" v-for="third in second.children" :key="third.id" closable type="warning" @close="handleDeleteRights(scope.row,third)">{{ third.authName }}</el-tag>
                   </el-col>
                 </el-row>
               </el-col>
@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import { getRoleList, deletes, editAdd } from '@/api/role'
+import { getRoleList, deletes, editAdd, deleteRights } from '@/api/role'
 import Authorization from '@/views/Role/Authorization'
 import EDIT from '@/views/Role/edit'
 
@@ -175,6 +175,17 @@ export default {
           })
         }
       })
+    },
+    async handleDeleteRights (role,rights) {
+      console.log(role.id,rights.id);
+      const { data,meta } = await deleteRights(role.id,rights.id)
+      if (meta.status === 200) {
+        this.$message({
+          type: 'success',
+          message: meta.msg
+        })
+        role.children = data
+      }
     }
   }
 }

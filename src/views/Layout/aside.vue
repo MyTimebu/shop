@@ -4,13 +4,13 @@
     <el-radio-button :label="false">展开</el-radio-button>
     <el-radio-button :label="true">收起</el-radio-button>
     </el-radio-group>
-    <el-submenu index="1">
+    <el-submenu :index="String(first.id)" v-for="first in menus" :key="first.id">
       <template slot="title">
         <i class="el-icon-menu"></i>
-        <span slot="title">用户管理</span>
+        <span slot="title">{{ first.authName }}</span>
       </template>
       <el-menu-item-group>
-        <el-menu-item index="/user">用户列表</el-menu-item>
+        <el-menu-item :index="`/${second.path}`" v-for="second in first.children" :key="second.id">{{ second.authName }}</el-menu-item>
       </el-menu-item-group>
     </el-submenu>
     <el-submenu index="2">
@@ -62,12 +62,18 @@
 </template>
 
 <script>
+import { getRightsMenu } from '@/api/rights'
+
 export default {
   name: 'Appaside',
   data () {
     return {
+      menus: '',
       isCollapse: true
     }
+  },
+  created() {
+    this.loadRightsMenu()
   },
   methods: {
     handleOpen (key, keyPath) {
@@ -75,6 +81,13 @@ export default {
     },
     handleClose (key, keyPath) {
       console.log(key, keyPath)
+    },
+    async loadRightsMenu () {
+      const { data,meta } =await getRightsMenu()
+      console.log(data,meta)
+      if (meta.status === 200) {
+        this.menus = data
+      }
     }
   }
 }

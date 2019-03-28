@@ -41,3 +41,8 @@ export const AddEdit = (id, roleName, roleDesc) => reout({
     roleName, roleDesc
   }
 }).then(res => res.data)
+
+export const deleteRights = (roleId, rid) => reout({
+  method: 'delete',
+  url: `/roles/${roleId}/rights/${rid}`
+}).then(res => res.data)
