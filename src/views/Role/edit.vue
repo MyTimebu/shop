@@ -1,7 +1,7 @@
 <template>
   <el-dialog title="编辑角色" :visible.sync="edits">
-      <el-form :model="form">
-        <el-form-item label="角色名称" :label-width="formLabelWidth">
+      <el-form :model="form" ref="addFormEl" :rules="addFormRules">
+        <el-form-item label="角色名称" :label-width="formLabelWidth" prop="roleName">
           <el-input v-model="form.roleName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="角色描述" :label-width="formLabelWidth">
@@ -26,7 +26,10 @@ export default {
         roleName: '',
         roleDesc: ''
       },
-      formLabelWidth: '120px'
+      formLabelWidth: '120px',
+      addFormRules: {
+        roleName: [{ required: true, message: '请输入角色名称', trigger: 'blur' }]
+      }
     }
   },
   methods: {
@@ -40,13 +43,22 @@ export default {
         this.edits = true
       }
     },
-    async queding () {
-      const { data, meta } = await AddEdit(this.id, this.form.roleName, this.form.roleDesc)
-      if (meta.status === 200) {
-        console.log(data, meta)
-        this.edits = false
-        this.$emit('edit-success')
-      }
+    queding () {
+      this.$refs.addFormEl.validate(async valid => {
+        if (!valid) { // 验证失败，什么都不做
+          return
+        }
+        const { data, meta } = await AddEdit(this.id, this.form.roleName, this.form.roleDesc)
+        if (meta.status === 200) {
+          console.log(data, meta)
+          this.edits = false
+          this.$emit('edit-success')
+          this.$message({
+            message: meta.msg,
+            type: 'success'
+          })
+        }
+      })
     }
   }
 }

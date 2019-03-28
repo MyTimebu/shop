@@ -68,10 +68,14 @@ export default {
     },
     async edite () {
       const { data, meta } = await getRoleset(this.id, (this.$refs.tree.getCheckedKeys()).join(','))
-      console.log((this.$refs.tree.getCheckedKeys()).join(','))
+      console.log(data, (this.$refs.tree.getCheckedKeys()).join(','))
       if (meta.status === 200) {
         console.log(123)
         this.dialogVisible = false
+        this.$message({
+          message: meta.msg,
+          type: 'success'
+        })
         this.$emit('edit-success')
       }
     }

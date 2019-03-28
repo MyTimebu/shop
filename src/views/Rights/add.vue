@@ -83,11 +83,11 @@
     <Authorization ref="qidong" v-on:edit-success="Rendering"></Authorization>
     <!-- 添加功能 -->
     <el-dialog title="添加角色" :visible.sync="edits">
-      <el-form :model="form">
-        <el-form-item label="角色名称" :label-width="formLabelWidth">
+      <el-form :model="form" ref="addFormEl" :rules="addFormRules">
+        <el-form-item label="角色名称" :label-width="formLabelWidth" prop="roleName">
           <el-input v-model="form.roleName" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="角色描述" :label-width="formLabelWidth">
+        <el-form-item label="角色描述" :label-width="formLabelWidth" prop="roleDesc">
           <el-input v-model="form.roleDesc" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -118,7 +118,11 @@ export default {
         roleName: '',
         roleDesc: ''
       },
-      formLabelWidth: '120px'
+      formLabelWidth: '120px',
+      addFormRules: {
+        roleName: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
+        roleDesc: [{ required: true, message: '请输入角色描述', trigger: 'blur' }]
+      }
     }
   },
   created () {
@@ -131,22 +135,46 @@ export default {
         this.Role_Rendering = data
       }
     },
-    async del (item) {
-      const { meta } = await deletes(item.id)
-      if (meta.status === 200) {
-        this.Rendering()
-      }
+    del (item) {
+      this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        const { meta } = await deletes(item.id)
+        if (meta.status === 200) {
+          this.Rendering()
+        }
+        this.$message({
+          type: 'success',
+          message: meta.msg
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
     edi () {
       this.edits = true
     },
-    async tianjia () {
-      const { data, meta } = await editAdd(this.form.roleName, this.form.roleDesc)
-      console.log(data, meta)
-      if (meta.status === 201) {
-        this.edits = false
-        this.Rendering()
-      }
+    tianjia () {
+      this.$refs.addFormEl.validate(async valid => {
+        if (!valid) { // 验证失败，什么都不做
+          return
+        }
+        const { data, meta } = await editAdd(this.form.roleName, this.form.roleDesc)
+        console.log(data, meta)
+        if (meta.status === 201) {
+          this.edits = false
+          this.Rendering()
+          this.$message({
+            message: meta.msg,
+            type: 'success'
+          })
+        }
+      })
     }
   }
 }
