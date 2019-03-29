@@ -176,9 +176,9 @@ export default {
         }
       })
     },
-    async handleDeleteRights (role,rights) {
-      console.log(role.id,rights.id);
-      const { data,meta } = await deleteRights(role.id,rights.id)
+    async handleDeleteRights (role, rights) {
+      console.log(role.id, rights.id)
+      const { data, meta } = await deleteRights(role.id, rights.id)
       if (meta.status === 200) {
         this.$message({
           type: 'success',

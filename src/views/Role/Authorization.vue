@@ -65,7 +65,7 @@ export default {
       this.defaultChecked = tem
     },
     async edite () {
-      const rid= [...this.$refs.tree.getHalfCheckedKeys(), ...this.$refs.tree.getCheckedKeys()].join(',')
+      const rid = [...this.$refs.tree.getHalfCheckedKeys(), ...this.$refs.tree.getCheckedKeys()].join(',')
 
       const { data, meta } = await getRoleset(this.id, rid)
       console.log(data)

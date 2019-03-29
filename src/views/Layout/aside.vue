@@ -72,7 +72,7 @@ export default {
       isCollapse: true
     }
   },
-  created() {
+  created () {
     this.loadRightsMenu()
   },
   methods: {
@@ -83,8 +83,8 @@ export default {
       console.log(key, keyPath)
     },
     async loadRightsMenu () {
-      const { data,meta } =await getRightsMenu()
-      console.log(data,meta)
+      const { data, meta } = await getRightsMenu()
+      console.log(data, meta)
       if (meta.status === 200) {
         this.menus = data
       }
