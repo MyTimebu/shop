@@ -21,4 +21,25 @@ export const GoodsCategories = () => request({
   data: {
     type: [1, 2, 3]
   }
-})
+}).then(res => res.data)
+
+export const AddGoods = ({ goods_name, goods_cat, goods_price, goods_number, goods_weight, attrs }) => request({
+  method: 'POST',
+  url: '/goods',
+  data: {
+    goods_name,
+    goods_cat,
+    goods_price,
+    goods_number,
+    goods_weight,
+    attrs
+  }
+}).then(res => res.data)
+
+export const canshu = (id, sel = 'many') => request({
+  methods: 'get',
+  url: `categories/${id}/attributes`,
+  params: {
+    sel
+  }
+}).then(res => res.data)
