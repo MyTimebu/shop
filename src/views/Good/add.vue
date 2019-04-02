@@ -92,11 +92,14 @@
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
           </el-upload>
         </el-tab-pane>
-        <el-tab-pane label="商品内容">商品内容</el-tab-pane>
+        <el-tab-pane label="商品内容">
+          <WE :title.sync="form.goods_introduce"></WE>
+        </el-tab-pane>
       </el-tabs>
     </div>
     <!-- 保存按钮 -->
     <div class="save">
+      <el-button type="warning" plain @click="() => { this.$router.replace('/goods') }">取消</el-button>
       <el-button type="info" plain @click="Add">添加</el-button>
     </div>
   </div>
@@ -105,6 +108,8 @@
 <script>
 import { GoodsCategories, AddGoods, canshu } from '@/api/goods'
 import { getToken } from '@/utils/token'
+import WE from '@/views/wangEditor'
+
 export default {
   name: 'GoodAdd',
   data () {
@@ -121,7 +126,8 @@ export default {
         goods_weight: '',
         goods_number: '',
         radio7: '',
-        goods_cat: []
+        goods_cat: [],
+        goods_introduce: ''
       },
       formLabelWidth: '120px',
       opten: [],
@@ -130,6 +136,9 @@ export default {
   },
   created () {
     this.Load()
+  },
+  components: {
+    WE
   },
   methods: {
     handleRemove (file, fileList) {
@@ -150,8 +159,8 @@ export default {
 
       if (label === '商品参数' || label === '商品属性') {
         // 根据在第一个 tab 选中的分类 id 动态请求加载商品参数
-        const { goods_cat } = this.formData
-        if (goods_cat.length === 0) {
+
+        if (this.form.goods_cat.length === 0) {
           return this.$message({
             type: 'warning',
             message: '请选择商品分类'
@@ -159,15 +168,13 @@ export default {
         }
       }
 
-      if (label === "商品参数") {
+      if (label === '商品参数') {
         this.parameter()
-      } else if (label === "商品属性"){
+      } else if (label === '商品属性') {
         this.shuxing()
       }
 
-      if (this.active++ > 5) {
-        this.active = 1
-      }
+      this.active = Number.parseInt(currentTab.index)
     },
 
     async Add () {
@@ -178,7 +185,7 @@ export default {
         goods_number,
         goods_weight } = this.form
 
-       // 处理商品属性
+      // 处理商品属性
       const categoryAttrs = this.goodsCategoryAttrs
         .map(attr => {
           return {
@@ -199,15 +206,24 @@ export default {
       // 将商品属性和商品参数合并为一个数组提交给接口
       const attrs = [...categoryAttrs, ...categoryParams]
 
-      const { data, meta } = await AddGoods({
+      const pics = this.fileList.map(item => {
+        const a = document.createElement('a')
+        a.href = item.url
+        return {
+          pic: a.pathname // 图片的服务端访问路径
+        }
+      })
+
+      const { meta } = await AddGoods({
         goods_name,
         goods_cat: goods_cat.join(','),
         goods_price,
         goods_number,
         goods_weight,
-        attrs
+        attrs,
+        pics
       })
-     if (meta.status === 201) {
+      if (meta.status === 201) {
         this.$router.replace('/goods')
         this.$message({
           type: 'success',
@@ -217,8 +233,8 @@ export default {
     },
 
     async parameter () {
-      console.log(this.form.goods_cat[this.form.goods_cat.length-1])
-      const { data, meta } = await canshu(this.form.goods_cat[this.form.goods_cat.length-1])
+      console.log(this.form)
+      const { data, meta } = await canshu(this.form.goods_cat[this.form.goods_cat.length - 1])
 
       if (meta.status === 200) {
         data.forEach(attr => {
@@ -228,7 +244,7 @@ export default {
       }
     },
     async shuxing () {
-      const { data, meta } = await canshu(this.form.goods_cat[this.form.goods_cat.length-1], 'only')
+      const { data, meta } = await canshu(this.form.goods_cat[this.form.goods_cat.length - 1], 'only')
       console.log(data, meta)
       if (meta.status === 200) {
         this.goodsCategoryParams = data

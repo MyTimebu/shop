@@ -23,7 +23,7 @@ export const GoodsCategories = () => request({
   }
 }).then(res => res.data)
 
-export const AddGoods = ({ goods_name, goods_cat, goods_price, goods_number, goods_weight, attrs }) => request({
+export const AddGoods = ({ goods_name, goods_cat, goods_price, goods_number, goods_weight, attrs = [], pics = [], goods_introduce = '' }) => request({
   method: 'POST',
   url: '/goods',
   data: {
@@ -32,7 +32,9 @@ export const AddGoods = ({ goods_name, goods_cat, goods_price, goods_number, goo
     goods_price,
     goods_number,
     goods_weight,
-    attrs
+    attrs,
+    pics,
+    goods_introduce
   }
 }).then(res => res.data)
 
@@ -43,3 +45,13 @@ export const canshu = (id, sel = 'many') => request({
     sel
   }
 }).then(res => res.data)
+
+export const tupian = files => {
+  const formData = new FormData()
+  formData.append('file', files[0])
+  return request({
+    method: 'POST',
+    url: '/upload',
+    data: formData
+  }).then(res => res.data)
+}
