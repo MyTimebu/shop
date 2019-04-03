@@ -30,7 +30,7 @@ export default {
       form: {
         cat_name: '',
         cat_pid: [],
-        ccat_levelat: ''
+        cat_level: ''
       },
       opten: [],
       formLabelWidth: '120px'
@@ -41,7 +41,7 @@ export default {
       this.dialogFormVisible = true
       const { data, meta } = await GoodsCategories()
       if (meta.status === 200) {
-        console.log(data,meta)
+        console.log(data, meta)
         this.opten = data
       }
     },
@@ -53,7 +53,7 @@ export default {
         cat_pid: cat_pid[cat_pid.length - 1] || 0,
         cat_level: cat_pid.length // 0 是一级、1 是 二级、2 是三级
       })
-
+      console.log(data)
       if (meta.status === 201) {
         this.dialogFormVisible = false
         this.$emit('add-success')

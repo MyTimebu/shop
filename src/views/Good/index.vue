@@ -42,8 +42,10 @@
           label="商品重量">
         </el-table-column>
         <el-table-column
-          prop="upd_time"
           label="创建时间">
+          <template slot-scope="scope">
+            {{ scope.row.upd_time | dateFormat }}
+          </template>
         </el-table-column>
         <el-table-column
           label="操作">

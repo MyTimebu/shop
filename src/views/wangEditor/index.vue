@@ -25,9 +25,8 @@ export default {
       // insert 是获取图片 url 后，插入到编辑器的方法
       const { data, meta } = await tupian(files)
       // 上传代码返回结果之后，将图片插入到编辑器中
-      console.log(data,meta)
+      console.log(data, meta)
       if (meta.status === 200) {
-
         insert(`http://localhost:8888/${data.tmp_path}`)
       }
     }

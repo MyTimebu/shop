@@ -22,7 +22,7 @@
       style="width: 100%; border-radius: 10px 10px 10px 10px;">
         <el-table-column type="expand">
           <template slot-scope="scope">
-            <el-row class="first" v-for="first in scope.row.children" :key="first.id">
+            <el-row class="first" v-for="first in scope.row.right" :key="first.id">
               <!-- 一级 -->
               <el-col :span="4">
                 <el-tag closable @close="handleDeleteRights(scope.row,first)">{{ first.authName }}</el-tag>
@@ -131,7 +131,11 @@ export default {
   methods: {
     async Rendering () {
       const { data, meta } = await getRoleList()
-      if (meta.status) {
+      if (meta.status === 200) {
+        data.forEach(item => {
+          item.right = item.children
+          delete item.children
+        })
         this.Role_Rendering = data
       }
     },

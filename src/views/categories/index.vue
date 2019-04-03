@@ -51,29 +51,13 @@ export default {
   components: {
     AddCate
   },
-  data() {
+  data () {
     return {
-      tableData: [{
-        id: 3,
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄',
-        children: [{
-            id: 31,
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄'
-          }, {
-            id: 32,
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄'
-        }]
-      }],
+      tableData: [],
       formData: []
     }
   },
-  created() {
+  created () {
     this.LoadCategories()
   },
   methods: {
@@ -95,7 +79,7 @@ export default {
     async LoadCategories () {
       const { data, meta } = await GoodsCategories()
       if (meta.status === 200) {
-        console.log(data,meta)
+        console.log(data, meta)
         this.formData = data
       }
     }
